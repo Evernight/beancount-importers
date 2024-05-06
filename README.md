@@ -1,7 +1,5 @@
 This repository contains a few simple importers for [Beancount](https://github.com/beancount/beancount), in particular for Wise, Monzo and Revolut banks.
 
-At the moment it's quick and dirty and probably should be used mostly as a boilerplate/reference but maybe it could work for you without too many changes:
-
 ## Setup
 In your local Python installation (or virtual environment / conda):
 
