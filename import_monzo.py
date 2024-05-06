@@ -45,7 +45,7 @@ def categorizer(txn, row):
                 monzo_category, "Expenses:MonzoUnclassified"
             )
     else:
-        elif payee == "Savings Pot" or payee == "Savings Monzo Pot":
+        if payee == "Savings Pot" or payee == "Savings Monzo Pot":
             posting_account = "Assets:Monzo:Savings"
         # elif '<your name>' in payee.lower():
         #     txn.meta["skip_transaction"] = True

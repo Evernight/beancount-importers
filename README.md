@@ -37,3 +37,7 @@ or:
 or similar (see into the ```beancount_import_run.py``` file, it's pretty straightforward).
 
 Then go to the UI at http://localhost:8101/ (by default).
+
+## Explanation
+``beancount_import_run.py`` is a simple interface to https://github.com/jbms/beancount-import. I prefer to store outputs from different import files in different directories so the structure of the config is based on that.
+It should be pretty straightforward to adjust it for your needs if necessary.
