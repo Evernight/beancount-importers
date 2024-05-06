@@ -2,6 +2,7 @@
 
 import os
 import sys
+from pathlib import Path
 
 import click
 
@@ -12,10 +13,11 @@ import import_wise
 import import_revolut
 
 @click.command()
+@click.option("--journal_file", type=click.Path(), default='main.bean')
 @click.option("--data_dir", type=click.Path(), default='beancount_import_data')
 @click.option("--output_dir", type=click.Path(), default='beancount_import_output')
 @click.argument("target_config")
-def main(target_config, data_dir, output_dir):
+def main(target_config, journal_file, data_dir, output_dir):
     import_config = {
         'monzo': dict(
             data_sources=[
@@ -74,9 +76,16 @@ def main(target_config, data_dir, output_dir):
         ),
     }
 
+    os.makedirs(os.path.join(output_dir, target_config), exist_ok=True)
+    Path(import_config[target_config]['transactions_output']).touch()
+    Path(os.path.join(output_dir, 'accounts.bean')).touch()
+    Path(os.path.join(output_dir, 'balance_accounts.bean')).touch()
+    Path(os.path.join(output_dir, 'prices.bean')).touch()
+    Path(os.path.join(output_dir, 'ignored.bean')).touch()
+
     beancount_import.webserver.main(
         {},
-        journal_input=os.path.join(output_dir, 'main.bean'),
+        journal_input=journal_file,
         ignored_journal=os.path.join(output_dir, 'ignored.bean'),
         default_output=import_config[target_config]['transactions_output'],
         open_account_output_map=[
