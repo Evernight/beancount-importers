@@ -76,7 +76,8 @@ def main(target_config, journal_file, data_dir, output_dir):
         ),
     }
 
-    os.makedirs(os.path.join(output_dir, target_config), exist_ok=True)
+    # Create output structure if it doesn't exist
+    os.makedirs(os.path.dirname(import_config[target_config]['transactions_output']), exist_ok=True)
     Path(import_config[target_config]['transactions_output']).touch()
     Path(os.path.join(output_dir, 'accounts.bean')).touch()
     Path(os.path.join(output_dir, 'balance_accounts.bean')).touch()
