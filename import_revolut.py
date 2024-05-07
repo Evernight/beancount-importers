@@ -38,7 +38,7 @@ def categorizer(txn, row):
 
         # Default by category
         if not posting_account:
-            posting_account = "Expenses:RevolutUnclassified"
+            posting_account = "Expenses:Uncategorized:Revolut"
     else:
         if "Withdrawing savings" in comment:
             posting_account = "Assets:Revolut:Savings"  
@@ -47,7 +47,7 @@ def categorizer(txn, row):
         elif "Referral reward" in comment:
             posting_account = "Income:Revolut:Referrals"
         else:
-            posting_account = "Income:RevolutUnclassified"
+            posting_account = "Income:Uncategorized:Revolut"
             # Ignore most incoming transactions as they will mostly duplicate Monzo's
             txn.meta["skip_transaction"] = True
 

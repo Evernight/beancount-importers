@@ -57,14 +57,14 @@ def categorizer(txn, row):
 
         # Default by category
         if not posting_account:
-            posting_account = "Expenses:WiseUnclassified"
+            posting_account = "Expenses:Uncategorized:Wise"
     else:
         if transaction_id in TRANSACTIONS_CLASSIFIED_BY_ID:
             posting_account = TRANSACTIONS_CLASSIFIED_BY_ID[transaction_id]
         elif comment.endswith("USD jar"):
             posting_account = "Assets:Wise:Savings:USD"
         else:
-            posting_account = 'Income:WiseUnclassified'
+            posting_account = 'Income:Uncategorized:Wise'
             pass
 
     txn.postings.append(

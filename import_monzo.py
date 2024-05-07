@@ -42,7 +42,7 @@ def categorizer(txn, row):
         # Default by category
         if not posting_account:
             posting_account = CATEGORY_TO_ACCOUNT_MAPPING.get(
-                monzo_category, "Expenses:MonzoUnclassified"
+                monzo_category, "Expenses:Uncategorized:Monzo"
             )
     else:
         if payee == "Savings Pot" or payee == "Savings Monzo Pot":
@@ -50,7 +50,7 @@ def categorizer(txn, row):
         # elif '<your name>' in payee.lower():
         #     txn.meta["skip_transaction"] = True
         if not posting_account:
-            posting_account = "Income:MonzoUnclassified"
+            posting_account = "Income:Uncategorized:Monzo"
 
     # Specific transactions
     if transaction_id in TRANSACTIONS_CLASSIFIED_BY_ID:
