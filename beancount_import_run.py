@@ -12,12 +12,7 @@ import import_monzo
 import import_wise
 import import_revolut
 
-@click.command()
-@click.option("--journal_file", type=click.Path(), default='main.bean')
-@click.option("--data_dir", type=click.Path(), default='beancount_import_data')
-@click.option("--output_dir", type=click.Path(), default='beancount_import_output')
-@click.argument("target_config")
-def main(target_config, journal_file, data_dir, output_dir):
+def get_import_config(data_dir, output_dir):
     import_config = {
         'monzo': dict(
             data_sources=[
@@ -75,8 +70,44 @@ def main(target_config, journal_file, data_dir, output_dir):
             transactions_output=os.path.join(output_dir, 'revolut', 'transactions.bean')
         ),
     }
+    import_config_all = dict(
+        data_sources=[],
+        transactions_output=os.path.join(output_dir, 'transactions.bean')
+    )
+    for k, v in import_config.items():
+        import_config_all['data_sources'].extend(v['data_sources'])
 
+    import_config['all'] = import_config_all
+    return import_config
+    
+@click.command()
+@click.option(
+    "--journal_file", 
+    type=click.Path(), 
+    default='main.bean',
+    help="Path to your main ledger file"
+)
+@click.option(
+    "--data_dir", 
+    type=click.Path(), 
+    default='beancount_import_data', 
+    help="Directory with your import data (e.g. bank statements in csv)"
+)
+@click.option(
+    "--output_dir", 
+    type=click.Path(), 
+    default='beancount_import_output',
+    help="Where to put output files (don't forget to include them in your main ledger)"
+)
+@click.option(
+    "--target_config", 
+    default="all", 
+    help="Note that specifying particular config will also result in transactions " + 
+    "being imported into specific output file for that config"
+)
+def main(target_config, journal_file, data_dir, output_dir):
     # Create output structure if it doesn't exist
+    import_config = get_import_config(data_dir, output_dir)
     os.makedirs(os.path.dirname(import_config[target_config]['transactions_output']), exist_ok=True)
     Path(import_config[target_config]['transactions_output']).touch()
     Path(os.path.join(output_dir, 'accounts.bean')).touch()

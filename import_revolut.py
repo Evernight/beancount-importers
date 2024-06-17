@@ -24,6 +24,8 @@ CATEGORY_TO_ACCOUNT_MAPPING = {
     "Donations": "Expenses:Donations",
 }
 
+# UNCATEGORIZED_EXPENSES_ACCOUNT = "Expenses:Uncategorized:Revolut"
+UNCATEGORIZED_EXPENSES_ACCOUNT = "Expenses:FIXME"
 
 def categorizer(txn, row):
     payee = row[4]
@@ -38,7 +40,7 @@ def categorizer(txn, row):
 
         # Default by category
         if not posting_account:
-            posting_account = "Expenses:Uncategorized:Revolut"
+            posting_account = UNCATEGORIZED_EXPENSES_ACCOUNT
     else:
         if "Withdrawing savings" in comment:
             posting_account = "Assets:Revolut:Savings"  
@@ -47,7 +49,7 @@ def categorizer(txn, row):
         elif "Referral reward" in comment:
             posting_account = "Income:Revolut:Referrals"
         else:
-            posting_account = "Income:Uncategorized:Revolut"
+            posting_account = "Income:RevolutUnclassified"
             # Ignore most incoming transactions as they will mostly duplicate Monzo's
             txn.meta["skip_transaction"] = True
 

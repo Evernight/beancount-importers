@@ -17,11 +17,14 @@ TRANSACTIONS_CLASSIFIED_BY_ID = {
     "CARD-XXXXXXXXX": "Expenses:Shopping",
 }
 
+# UNCATEGORIZED_EXPENSES_ACCOUNT = "Expenses:Uncategorized:Wise"
+UNCATEGORIZED_EXPENSES_ACCOUNT = "Expenses:FIXME"
 
 def categorizer(txn, row):
     transaction_id = row[0]
     payee = row[13]
     comment = row[4]
+    note = row[17]
     if not payee and comment.startswith("Sent money to "):
         payee = comment[14:]
 
@@ -57,7 +60,7 @@ def categorizer(txn, row):
 
         # Default by category
         if not posting_account:
-            posting_account = "Expenses:Uncategorized:Wise"
+            posting_account = UNCATEGORIZED_EXPENSES_ACCOUNT
     else:
         if transaction_id in TRANSACTIONS_CLASSIFIED_BY_ID:
             posting_account = TRANSACTIONS_CLASSIFIED_BY_ID[transaction_id]
@@ -70,6 +73,8 @@ def categorizer(txn, row):
     txn.postings.append(
         data.Posting(posting_account, -txn.postings[0].units, None, None, None, None)
     )
+    if note:
+        txn.meta['comment'] = note
 
     return txn
 
