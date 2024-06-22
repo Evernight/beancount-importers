@@ -105,7 +105,17 @@ def get_import_config(data_dir, output_dir):
     help="Note that specifying particular config will also result in transactions " + 
     "being imported into specific output file for that config"
 )
-def main(target_config, journal_file, data_dir, output_dir):
+@click.option(
+    "--address", 
+    default="127.0.0.1", 
+    help="Web server address"
+)
+@click.option(
+    "--port", 
+    default="8101", 
+    help="Web server port"
+)
+def main(port, address, target_config, journal_file, data_dir, output_dir):
     # Create output structure if it doesn't exist
     import_config = get_import_config(data_dir, output_dir)
     os.makedirs(os.path.dirname(import_config[target_config]['transactions_output']), exist_ok=True)
@@ -117,6 +127,8 @@ def main(target_config, journal_file, data_dir, output_dir):
 
     beancount_import.webserver.main(
         {},
+        port=port,
+        address=address,
         journal_input=journal_file,
         ignored_journal=os.path.join(output_dir, 'ignored.bean'),
         default_output=import_config[target_config]['transactions_output'],
