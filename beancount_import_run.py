@@ -36,6 +36,28 @@ def get_import_config(data_dir, output_dir):
             ],
             transactions_output=os.path.join(output_dir, 'wise_usd', 'transactions.bean')
         ),
+        'wise_gbp': dict(
+            data_sources=[
+                dict(
+                    module='beancount_import.source.generic_importer_source',
+                    importer=import_wise.get_ingest_importer_for_currency('GBP'),
+                    account='Assets:Wise:Cash',
+                    directory=os.path.join(data_dir, 'wise_gbp')
+                )
+            ],
+            transactions_output=os.path.join(output_dir, 'wise_gbp', 'transactions.bean')
+        ),
+        'wise_eur': dict(
+            data_sources=[
+                dict(
+                    module='beancount_import.source.generic_importer_source',
+                    importer=import_wise.get_ingest_importer_for_currency('EUR'),
+                    account='Assets:Wise:Cash',
+                    directory=os.path.join(data_dir, 'wise_eur')
+                )
+            ],
+            transactions_output=os.path.join(output_dir, 'wise_eur', 'transactions.bean')
+        ),
         'revolut_usd': dict(
             data_sources=[
                 dict(
