@@ -13,13 +13,13 @@ import import_monzo
 import import_wise
 import import_revolut
 
-def get_importer(type, currency):
+def get_importer(type, account, currency):
     if type == 'monzo':
-        return import_monzo.IMPORTER_INGEST
+        return import_monzo.get_ingest_importer(account, currency)
     elif type == 'wise':
-        return import_wise.get_ingest_importer_for_currency(currency),
+        return import_wise.get_ingest_importer(account, currency)
     elif type == 'revolut':
-        return import_revolut.get_ingest_importer_for_currency(currency),
+        return import_revolut.get_ingest_importer(account, currency)
     else:
         return None
 
@@ -31,7 +31,7 @@ def load_import_config_from_file(filename, data_dir, output_dir):
             data_sources.append(
                 dict(
                     module='beancount_import.source.generic_importer_source',
-                    importer=get_importer(params['importer'], params['currency']),
+                    importer=get_importer(params['importer'], params['account'], params['currency']),
                     account=params['account'],
                     directory=os.path.join(data_dir, key)
                 )
@@ -49,7 +49,7 @@ def get_import_config(data_dir, output_dir):
             data_sources=[
                 dict(
                     module='beancount_import.source.generic_importer_source',
-                    importer=import_monzo.IMPORTER_INGEST,
+                    importer=import_monzo.get_ingest_importer('Assets:Monzo:Cash', 'GBP'),
                     account='Assets:Monzo:Cash',
                     directory=os.path.join(data_dir, 'monzo')
                 )
@@ -60,7 +60,7 @@ def get_import_config(data_dir, output_dir):
             data_sources=[
                 dict(
                     module='beancount_import.source.generic_importer_source',
-                    importer=import_wise.get_ingest_importer_for_currency('USD'),
+                    importer=import_wise.get_ingest_importer('Assets:Wise:Cash', 'USD'),
                     account='Assets:Wise:Cash',
                     directory=os.path.join(data_dir, 'wise_usd')
                 )
@@ -71,7 +71,7 @@ def get_import_config(data_dir, output_dir):
             data_sources=[
                 dict(
                     module='beancount_import.source.generic_importer_source',
-                    importer=import_wise.get_ingest_importer_for_currency('GBP'),
+                    importer=import_wise.get_ingest_importer('Assets:Wise:Cash', 'GBP'),
                     account='Assets:Wise:Cash',
                     directory=os.path.join(data_dir, 'wise_gbp')
                 )
@@ -82,7 +82,7 @@ def get_import_config(data_dir, output_dir):
             data_sources=[
                 dict(
                     module='beancount_import.source.generic_importer_source',
-                    importer=import_wise.get_ingest_importer_for_currency('EUR'),
+                    importer=import_wise.get_ingest_importer('Assets:Wise:Cash', 'EUR'),
                     account='Assets:Wise:Cash',
                     directory=os.path.join(data_dir, 'wise_eur')
                 )
@@ -93,7 +93,7 @@ def get_import_config(data_dir, output_dir):
             data_sources=[
                 dict(
                     module='beancount_import.source.generic_importer_source',
-                    importer=import_revolut.get_ingest_importer_for_currency('USD'),
+                    importer=import_revolut.get_ingest_importer('Assets:Revolut:Cash', 'USD'),
                     account='Assets:Revolut:Cash',
                     directory=os.path.join(data_dir, 'revolut_usd')
                 )
@@ -104,7 +104,7 @@ def get_import_config(data_dir, output_dir):
             data_sources=[
                 dict(
                     module='beancount_import.source.generic_importer_source',
-                    importer=import_revolut.get_ingest_importer_for_currency('GBP'),
+                    importer=import_revolut.get_ingest_importer('Assets:Revolut:Cash', 'GBP'),
                     account='Assets:Revolut:Cash',
                     directory=os.path.join(data_dir, 'revolut_gbp')
                 )
@@ -115,7 +115,7 @@ def get_import_config(data_dir, output_dir):
             data_sources=[
                 dict(
                     module='beancount_import.source.generic_importer_source',
-                    importer=import_revolut.get_ingest_importer_for_currency('EUR'),
+                    importer=import_revolut.get_ingest_importer('Assets:Revolut:Cash', 'EUR'),
                     account='Assets:Revolut:Cash',
                     directory=os.path.join(data_dir, 'revolut_eur')
                 )

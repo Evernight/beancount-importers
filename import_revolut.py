@@ -74,7 +74,7 @@ IMPORTER = csv.CSVImporter(
     categorizer=categorizer,
 )
 
-def get_ingest_importer_for_currency(currency):
+def get_ingest_importer(account, currency):
     return IngestImporter(
         {
             IngestCol.DATE: "Started Date",
@@ -83,7 +83,7 @@ def get_ingest_importer_for_currency(currency):
             IngestCol.PAYEE: "Description",
             IngestCol.BALANCE: "Balance",
         },
-        "Assets:Revolut:Cash",
+        account,
         currency,
         categorizer=categorizer,
     )

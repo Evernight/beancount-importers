@@ -80,20 +80,21 @@ IMPORTER = csv.CSVImporter(
     dateutil_kwds={"parserinfo": dateutil.parser.parserinfo(dayfirst=True)},
 )
 
-IMPORTER_INGEST = IngestImporter(
-    {
-        IngestCol.DATE: "Date",
-        IngestCol.NARRATION: "Description",
-        IngestCol.AMOUNT: "Amount",
-        IngestCol.PAYEE: "Name",
-        IngestCol.REFERENCE_ID: "Transaction ID",
-        IngestCol.CATEGORY: "Category",
-    },
-    "Assets:Monzo:Cash",
-    "GBP",
-    categorizer=categorizer,
-    dateutil_kwds={"parserinfo": dateutil.parser.parserinfo(dayfirst=True)},
-)
+def get_ingest_importer(account, currency):
+    return IngestImporter(
+        {
+            IngestCol.DATE: "Date",
+            IngestCol.NARRATION: "Description",
+            IngestCol.AMOUNT: "Amount",
+            IngestCol.PAYEE: "Name",
+            IngestCol.REFERENCE_ID: "Transaction ID",
+            IngestCol.CATEGORY: "Category",
+        },
+        account,
+        currency,
+        categorizer=categorizer,
+        dateutil_kwds={"parserinfo": dateutil.parser.parserinfo(dayfirst=True)},
+    )
 
 @click.command()
 @click.argument("filename", type=click.Path())

@@ -94,7 +94,7 @@ IMPORTER = csv.CSVImporter(
     dateutil_kwds={"parserinfo": dateutil.parser.parserinfo(dayfirst=True)},
 )
 
-def get_ingest_importer_for_currency(currency):
+def get_ingest_importer(account, currency):
     return IngestImporter(
         {
             IngestCol.DATE: "Date",
@@ -104,7 +104,7 @@ def get_ingest_importer_for_currency(currency):
             IngestCol.REFERENCE_ID: "TransferWise ID",
             IngestCol.BALANCE: "Running Balance",
         },
-        "Assets:Wise:Cash",
+        account,
         currency,
         categorizer=categorizer,
         dateutil_kwds={"parserinfo": dateutil.parser.parserinfo(dayfirst=True)},
