@@ -1,0 +1,5 @@
+beancount-import==1.4.0
+beangulp @ git+https://github.com/beancount/beangulp@ec3752930efdfa7358890e263f1aba16151ae316
+beancount
+pyyaml
+click
