@@ -1,12 +1,12 @@
+import click
+import io
+
 from beangulp.importers import csv
 from beancount.parser import printer
 from beancount.core import data
-from bank_classifier import payee_to_account_mapping
-
 from beancount.ingest.importers.csv import Importer as IngestImporter, Col as IngestCol
 
-import click
-import io
+from beancount_importers.bank_classifier import payee_to_account_mapping
 
 Col = csv.Col
 

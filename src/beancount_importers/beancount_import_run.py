@@ -9,9 +9,9 @@ import click
 
 import beancount_import.webserver
 
-import import_monzo
-import import_wise
-import import_revolut
+import beancount_importers.import_monzo as import_monzo
+import beancount_importers.import_wise as import_wise
+import beancount_importers.import_revolut as import_revolut
 
 def get_importer(type, account, currency):
     if type == 'monzo':
