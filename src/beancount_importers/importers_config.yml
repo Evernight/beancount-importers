@@ -41,3 +41,19 @@ importers:
       wht_account: "Expenses:IB:WithholdingTax"
       fees_account: "Expenses:IB:Commissions"
       pnl_account: "Income:IB:PnL"
+  kraken:
+    importer: kraken
+    account: Assets:Kraken
+    currency: USD
+  binance:
+    importer: binance
+    account: Assets:Binance
+    currency: USD
+    params:
+      spot_wallet_account: "Assets:Crypto:Binance:Cash"
+      fees_account: "Expenses:Fees:Crypto:Binance"
+      p2p_account: "Assets:Crypto:Binance:P2P"
+      savings_account: "Assets:Crypto:Binance:Savings"
+      income_interest_account: "Income:Crypto:Binance:Interest"
+      income_referal_account: "Income:Crypto:Binance:Referal"
+      income_distributions_account: "Income:Crypto:Binance:Distribution"
