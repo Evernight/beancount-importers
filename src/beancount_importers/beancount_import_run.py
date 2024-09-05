@@ -9,17 +9,33 @@ import click
 
 import beancount_import.webserver
 
+from uabean.importers import ibkr
+
 import beancount_importers.import_monzo as import_monzo
 import beancount_importers.import_wise as import_wise
 import beancount_importers.import_revolut as import_revolut
 
-def get_importer(type, account, currency):
+def get_importer_config(type, account, currency, importer_params):
     if type == 'monzo':
-        return import_monzo.get_ingest_importer(account, currency)
+        return dict(
+            module='beancount_import.source.generic_importer_source',
+            importer=import_monzo.get_ingest_importer(account, currency),
+        )
     elif type == 'wise':
-        return import_wise.get_ingest_importer(account, currency)
+        return dict(
+            module='beancount_import.source.generic_importer_source',
+            importer=import_wise.get_ingest_importer(account, currency),
+        )
     elif type == 'revolut':
-        return import_revolut.get_ingest_importer(account, currency)
+        return dict(
+            module='beancount_import.source.generic_importer_source',
+            importer=import_revolut.get_ingest_importer(account, currency),
+        )
+    elif type == 'ibkr':
+        return dict(
+            module='beancount_import.source.generic_importer_source_beangulp',
+            importer=ibkr.Importer(use_existing_holdings=False, **importer_params),
+        )
     else:
         return None
 
@@ -28,13 +44,13 @@ def load_import_config_from_file(filename, data_dir, output_dir):
         parsed_config = yaml.safe_load(config_file)
         data_sources = []
         for key, params in parsed_config['importers'].items():
+            config = dict(
+                account=params['account'],
+                directory=os.path.join(data_dir, key),
+                **get_importer_config(params['importer'], params.get('account'), params.get('currency'), params.get('params'))
+            )
             data_sources.append(
-                dict(
-                    module='beancount_import.source.generic_importer_source',
-                    importer=get_importer(params['importer'], params['account'], params['currency']),
-                    account=params['account'],
-                    directory=os.path.join(data_dir, key)
-                )
+                config
             )
         return dict(
             all=dict(
@@ -122,6 +138,17 @@ def get_import_config(data_dir, output_dir):
             ],
             transactions_output=os.path.join(output_dir, 'revolut', 'transactions.bean')
         ),
+        'ibkr': dict(
+            data_sources=[
+                dict(
+                    module='beancount_import.source.generic_importer_source_beangulp',
+                    importer=ibkr.Importer(),
+                    account='Assets:IB',
+                    directory=os.path.join(data_dir, 'ibkr')
+                )
+            ],
+            transactions_output=os.path.join(output_dir, 'ibkr', 'transactions.bean')
+    ),
     }
     import_config_all = dict(
         data_sources=[],

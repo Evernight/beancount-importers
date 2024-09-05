@@ -29,3 +29,15 @@ importers:
     importer: wise
     account: Assets:Wise:Cash
     currency: USD
+  ibkr:
+    importer: ibkr
+    account: Assets:IB:Cash
+    currency: USD
+    params:
+      cash_account: "Assets:IB:Cash"
+      assets_account: "Assets:IB:{symbol}"
+      div_account: "Income:IB:{symbol}:Div"
+      interest_account: "Income:IB:Interest"
+      wht_account: "Expenses:IB:WithholdingTax"
+      fees_account: "Expenses:IB:Commissions"
+      pnl_account: "Income:IB:PnL"
