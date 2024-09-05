@@ -9,7 +9,23 @@ import click
 
 import beancount_import.webserver
 
-from uabean.importers import ibkr
+from uabean.importers import (
+    wise_json,
+    alfa_business,
+    ukrsib_business,
+    tronscan,
+    nexo,
+    ibkr,
+    binance,
+    monobank,
+    sensebank,
+    privatbank_xls,
+    oschad_api,
+    pumb_xls,
+    procredit_business,
+    procredit_xls,
+    kraken,
+)
 
 import beancount_importers.import_monzo as import_monzo
 import beancount_importers.import_wise as import_wise
@@ -35,6 +51,29 @@ def get_importer_config(type, account, currency, importer_params):
         return dict(
             module='beancount_import.source.generic_importer_source_beangulp',
             importer=ibkr.Importer(use_existing_holdings=False, **importer_params),
+        )
+    elif type == 'monobank':
+        mapped_account_config = {}
+        for p in importer_params.get('account_config', []):
+            tp = p[0]
+            currency = p[1]
+            account = p[2]
+            mapped_account_config[(tp, currency)] = account
+        mapped_params = importer_params.copy()
+        mapped_params['account_config'] = mapped_account_config
+        return dict(
+            module='beancount_import.source.generic_importer_source_beangulp',
+            importer=monobank.Importer(**mapped_params),
+        )
+    elif type == 'kraken':
+        return dict(
+            module='beancount_import.source.generic_importer_source_beangulp',
+            importer=kraken.Importer(**(importer_params or {})),
+        )
+    elif type == 'binance':
+        return dict(
+            module='beancount_import.source.generic_importer_source_beangulp',
+            importer=binance.Importer(**(importer_params or {})),
         )
     else:
         return None
