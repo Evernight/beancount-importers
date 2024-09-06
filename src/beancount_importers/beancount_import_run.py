@@ -60,12 +60,12 @@ def get_importer_config(type, account, currency, importer_params):
             module='beancount_import.source.generic_importer_source_beangulp',
             importer=ibkr.Importer(use_existing_holdings=False, **importer_params),
             description=(
-                "Go to Performance & Reports > Flex Queries. "
+                'Go to Performance & Reports > Flex Queries. '
                 'Create new one. Enable "Interest accruals", "Cash Transactions", "Trades", "Transfers". '
                 'From "Cash Transactions" disable fields "FIGI", "Issuer Country Code", "Available For Trading Date". '
                 'From "Trades" disable "Sub Category", "FIGI", "Issuer Country Code", "Related Trade ID", '
                 '"Orig *", "Related Transaction ID", "RTN", "Initial Investment". Otherwise importer may break.'
-            )
+            ),
             emoji='📈'
         )
     elif type == 'monobank':
