@@ -36,21 +36,37 @@ def get_importer_config(type, account, currency, importer_params):
         return dict(
             module='beancount_import.source.generic_importer_source',
             importer=import_monzo.get_ingest_importer(account, currency),
+            description(
+                "In the app go to Help > Download a statement. "
+                "The easiest way would be just to download monthly statements every month."
+            ),
+            emoji='💷'
         )
     elif type == 'wise':
         return dict(
             module='beancount_import.source.generic_importer_source',
             importer=import_wise.get_ingest_importer(account, currency),
+            description='Can be downloaded online from https://wise.com/balances/statements',
+            emoji='💵'
         )
     elif type == 'revolut':
         return dict(
             module='beancount_import.source.generic_importer_source',
             importer=import_revolut.get_ingest_importer(account, currency),
+            emoji='💵'
         )
     elif type == 'ibkr':
         return dict(
             module='beancount_import.source.generic_importer_source_beangulp',
             importer=ibkr.Importer(use_existing_holdings=False, **importer_params),
+            description=(
+                "Go to Performance & Reports > Flex Queries. "
+                'Create new one. Enable "Interest accruals", "Cash Transactions", "Trades", "Transfers". '
+                'From "Cash Transactions" disable fields "FIGI", "Issuer Country Code", "Available For Trading Date". '
+                'From "Trades" disable "Sub Category", "FIGI", "Issuer Country Code", "Related Trade ID", '
+                '"Orig *", "Related Transaction ID", "RTN", "Initial Investment". Otherwise importer may break.'
+            )
+            emoji='📈'
         )
     elif type == 'monobank':
         mapped_account_config = {}
@@ -64,16 +80,19 @@ def get_importer_config(type, account, currency, importer_params):
         return dict(
             module='beancount_import.source.generic_importer_source_beangulp',
             importer=monobank.Importer(**mapped_params),
+            emoji='💵'
         )
     elif type == 'kraken':
         return dict(
             module='beancount_import.source.generic_importer_source_beangulp',
             importer=kraken.Importer(**(importer_params or {})),
+            emoji='🎰'
         )
     elif type == 'binance':
         return dict(
             module='beancount_import.source.generic_importer_source_beangulp',
             importer=binance.Importer(**(importer_params or {})),
+            emoji='🎰'
         )
     else:
         return None
