@@ -2,7 +2,6 @@
 
 import os
 import sys
-import logging
 from pathlib import Path
 
 import yaml
@@ -287,7 +286,6 @@ def main(port, address, target_config, output_dir, data_dir, importers_config_fi
         ],
         price_output=os.path.join(output_dir, 'prices.bean'),
         data_sources=import_config[target_config]['data_sources'],
-        loglevel=logging.DEBUG
     )
     
 if __name__ == '__main__':
