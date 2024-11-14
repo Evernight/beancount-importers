@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import os
-import sys
 from pathlib import Path
 
 import yaml
@@ -10,20 +9,9 @@ import click
 import beancount_import.webserver
 
 from uabean.importers import (
-    wise_json,
-    alfa_business,
-    ukrsib_business,
-    tronscan,
-    nexo,
     ibkr,
     binance,
     monobank,
-    sensebank,
-    privatbank_xls,
-    oschad_api,
-    pumb_xls,
-    procredit_business,
-    procredit_xls,
     kraken,
 )
 
@@ -58,7 +46,7 @@ def get_importer_config(type, account, currency, importer_params):
     elif type == 'ibkr':
         return dict(
             module='beancount_import.source.generic_importer_source_beangulp',
-            importer=ibkr.Importer(use_existing_holdings=False, **importer_params),
+            importer=ibkr.Importer(use_existing_holdings=False, **(importer_params or {})),
             description=(
                 'Go to Performance & Reports > Flex Queries. '
                 'Create new one. Enable "Interest accruals", "Cash Transactions", "Trades", "Transfers". '
