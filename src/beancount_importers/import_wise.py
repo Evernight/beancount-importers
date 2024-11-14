@@ -1,13 +1,11 @@
-import click
-import io
+import beangulp
 import dateutil
 
 from beangulp.importers import csv
-from beancount.parser import printer
 from beancount.core import data
 from beancount.ingest.importers.csv import Importer as IngestImporter, Col as IngestCol
 
-from beancount_importers.bank_classifier import payee_to_account_mapping, filter_refunds
+from beancount_importers.bank_classifier import payee_to_account_mapping
 
 Col = csv.Col
 
@@ -110,18 +108,6 @@ def get_ingest_importer(account, currency):
         dateutil_kwds={"parserinfo": dateutil.parser.parserinfo(dayfirst=True)},
     )
 
-@click.command()
-@click.argument("filename", type=click.Path())
-def main(filename):
-    entries = IMPORTER.extract(filename)
-
-    entries = filter_refunds(entries)
-    entries = [e for e in entries if not e.meta.get("skip_transaction")]
-
-    output = io.StringIO()
-    printer.print_entries(entries, file=output)
-    print(output.getvalue())
-
-
 if __name__ == "__main__":
-    main()
+    ingest = beangulp.Ingest([IMPORTER], [])
+    ingest()

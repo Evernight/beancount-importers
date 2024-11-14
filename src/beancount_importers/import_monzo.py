@@ -1,14 +1,12 @@
-import click
-import io
+import beangulp
 
 from beangulp.importers import csv
-from beancount.parser import printer
 from beancount.core import data
 from functools import partial
 import dateutil
 from beancount.ingest.importers.csv import Importer as IngestImporter, Col as IngestCol
 
-from beancount_importers.bank_classifier import payee_to_account_mapping, filter_refunds
+from beancount_importers.bank_classifier import payee_to_account_mapping
 
 Col = csv.Col
 
@@ -44,7 +42,7 @@ def categorizer(params, txn, row):
         posting_account = payee_to_account_mapping.get(payee)
 
         # Default by category
-        if not params['ignore_bank_categories']:
+        if not params.get('ignore_bank_categories'):
             if not posting_account:
                 posting_account = CATEGORY_TO_ACCOUNT_MAPPING.get(
                     monzo_category, UNCATEGORIZED_EXPENSES_ACCOUNT
@@ -102,17 +100,6 @@ def get_ingest_importer(account, currency, importer_params):
         dateutil_kwds={"parserinfo": dateutil.parser.parserinfo(dayfirst=True)},
     )
 
-@click.command()
-@click.argument("filename", type=click.Path())
-def main(filename):
-    entries = IMPORTER.extract(filename)
-    entries = filter_refunds(entries)
-    entries = [e for e in entries if not e.meta.get("skip_transaction")]
-
-    output = io.StringIO()
-    printer.print_entries(entries, file=output)
-    print(output.getvalue())
-
-
 if __name__ == "__main__":
-    main()
+    ingest = beangulp.Ingest([IMPORTER], [])
+    ingest()

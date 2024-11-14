@@ -1,8 +1,5 @@
-import click
-import io
-
+import beangulp
 from beangulp.importers import csv
-from beancount.parser import printer
 from beancount.core import data
 from beancount.ingest.importers.csv import Importer as IngestImporter, Col as IngestCol
 
@@ -74,16 +71,6 @@ def get_ingest_importer(account, currency):
         categorizer=categorizer,
     )
 
-@click.command()
-@click.argument("filename", type=click.Path())
-def main(filename):
-    entries = IMPORTER.extract(filename)
-    entries = [e for e in entries if not e.meta.get("skip_transaction")]
-
-    output = io.StringIO()
-    printer.print_entries(entries, file=output)
-    print(output.getvalue())
-
-
 if __name__ == "__main__":
-    main()
+    ingest = beangulp.Ingest([IMPORTER], [])
+    ingest()
