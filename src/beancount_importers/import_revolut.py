@@ -10,20 +10,6 @@ from beancount_importers.bank_classifier import payee_to_account_mapping
 
 Col = csv.Col
 
-CATEGORY_TO_ACCOUNT_MAPPING = {
-    "Eating out": "Expenses:EatingOut",
-    "Groceries": "Expenses:Groceries",
-    "Shopping": "Expenses:Shopping",
-    "Accommodation": "Expenses:Accommodation",
-    "Bills": "Expenses:Bills",
-    "Hobbies": "Expenses:Hobbies",
-    "Wellness": "Expenses:Wellness",
-    "Transport": "Expenses:Transport",
-    "Travel": "Expenses:Travel",
-    "Entertainment": "Expenses:Entertainment",
-    "Donations": "Expenses:Donations",
-}
-
 # UNCATEGORIZED_EXPENSES_ACCOUNT = "Expenses:Uncategorized:Revolut"
 UNCATEGORIZED_EXPENSES_ACCOUNT = "Expenses:FIXME"
 

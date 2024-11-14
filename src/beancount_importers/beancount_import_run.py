@@ -23,7 +23,7 @@ def get_importer_config(type, account, currency, importer_params):
     if type == 'monzo':
         return dict(
             module='beancount_import.source.generic_importer_source',
-            importer=import_monzo.get_ingest_importer(account, currency),
+            importer=import_monzo.get_ingest_importer(account, currency, importer_params),
             description=(
                 "In the app go to Help > Download a statement. "
                 "The easiest way would be just to download monthly statements every month."

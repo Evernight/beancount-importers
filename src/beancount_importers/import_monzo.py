@@ -4,6 +4,7 @@ import io
 from beangulp.importers import csv
 from beancount.parser import printer
 from beancount.core import data
+from functools import partial
 import dateutil
 from beancount.ingest.importers.csv import Importer as IngestImporter, Col as IngestCol
 
@@ -31,7 +32,7 @@ TRANSACTIONS_CLASSIFIED_BY_ID = {
 # UNCATEGORIZED_EXPENSES_ACCOUNT = "Expenses:Uncategorized:Monzo"
 UNCATEGORIZED_EXPENSES_ACCOUNT = "Expenses:FIXME"
 
-def categorizer(txn, row):
+def categorizer(params, txn, row):
     transaction_id = row[0]
     payee = row[4]
     monzo_category = row[6]
@@ -43,10 +44,14 @@ def categorizer(txn, row):
         posting_account = payee_to_account_mapping.get(payee)
 
         # Default by category
+        if not params['ignore_bank_categories']:
+            if not posting_account:
+                posting_account = CATEGORY_TO_ACCOUNT_MAPPING.get(
+                    monzo_category, UNCATEGORIZED_EXPENSES_ACCOUNT
+                )
         if not posting_account:
-            posting_account = CATEGORY_TO_ACCOUNT_MAPPING.get(
-                monzo_category, UNCATEGORIZED_EXPENSES_ACCOUNT
-            )
+            posting_account = UNCATEGORIZED_EXPENSES_ACCOUNT
+            
     else:
         if payee == "Savings Pot" or payee == "Savings Monzo Pot":
             posting_account = "Assets:Monzo:Savings"
@@ -77,11 +82,11 @@ IMPORTER = csv.CSVImporter(
     },
     "Assets:Monzo:Cash",
     "GBP",
-    categorizer=categorizer,
+    categorizer=partial(categorizer, {}),
     dateutil_kwds={"parserinfo": dateutil.parser.parserinfo(dayfirst=True)},
 )
 
-def get_ingest_importer(account, currency):
+def get_ingest_importer(account, currency, importer_params):
     return IngestImporter(
         {
             IngestCol.DATE: "Date",
@@ -93,7 +98,7 @@ def get_ingest_importer(account, currency):
         },
         account,
         currency,
-        categorizer=categorizer,
+        categorizer=partial(categorizer, importer_params),
         dateutil_kwds={"parserinfo": dateutil.parser.parserinfo(dayfirst=True)},
     )
 
