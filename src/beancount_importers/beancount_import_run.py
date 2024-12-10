@@ -20,8 +20,10 @@ import beancount_importers.import_wise as import_wise
 import beancount_importers.import_revolut as import_revolut
 
 def get_importer_config(type, account, currency, importer_params):
+    common = dict(type=type, account=account, currency=currency)
     if type == 'monzo':
         return dict(
+            **common,
             module='beancount_import.source.generic_importer_source',
             importer=import_monzo.get_ingest_importer(account, currency, importer_params),
             description=(
@@ -32,6 +34,7 @@ def get_importer_config(type, account, currency, importer_params):
         )
     elif type == 'wise':
         return dict(
+            **common,
             module='beancount_import.source.generic_importer_source',
             importer=import_wise.get_ingest_importer(account, currency),
             description='Can be downloaded online from https://wise.com/balances/statements',
@@ -39,12 +42,14 @@ def get_importer_config(type, account, currency, importer_params):
         )
     elif type == 'revolut':
         return dict(
+            **common,
             module='beancount_import.source.generic_importer_source',
             importer=import_revolut.get_ingest_importer(account, currency),
             emoji='💵'
         )
     elif type == 'ibkr':
         return dict(
+            **common,
             module='beancount_import.source.generic_importer_source_beangulp',
             importer=ibkr.Importer(use_existing_holdings=False, **(importer_params or {})),
             description=(
@@ -66,18 +71,21 @@ def get_importer_config(type, account, currency, importer_params):
         mapped_params = importer_params.copy()
         mapped_params['account_config'] = mapped_account_config
         return dict(
+            **common,
             module='beancount_import.source.generic_importer_source_beangulp',
             importer=monobank.Importer(**mapped_params),
             emoji='💵'
         )
     elif type == 'kraken':
         return dict(
+            **common,
             module='beancount_import.source.generic_importer_source_beangulp',
             importer=kraken.Importer(**(importer_params or {})),
             emoji='🎰'
         )
     elif type == 'binance':
         return dict(
+            **common,
             module='beancount_import.source.generic_importer_source_beangulp',
             importer=binance.Importer(**(importer_params or {})),
             emoji='🎰'
@@ -91,7 +99,6 @@ def load_import_config_from_file(filename, data_dir, output_dir):
         data_sources = []
         for key, params in parsed_config['importers'].items():
             config = dict(
-                account=params['account'],
                 directory=os.path.join(data_dir, key),
                 **get_importer_config(params['importer'], params.get('account'), params.get('currency'), params.get('params'))
             )
