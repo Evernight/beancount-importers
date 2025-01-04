@@ -1,5 +1,5 @@
 This repository contains a few simple [beangulp](https://github.com/beancount/beangulp)'s CSVImporter or beancount-ingest (legacy interface) importers for [Beancount](https://github.com/beancount/beancount) for Wise, Monzo and Revolut banks.
-They are also integrated for using together with [beancount-import](https://github.com/jbms/beancount-import)
+They are also integrated for using together with [beancount-import](https://github.com/jbms/beancount-import) as well as importer for Interactive Brokers.
 
 The easiest way to use these importers is via https://github.com/Evernight/lazy-beancount
 
