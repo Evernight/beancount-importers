@@ -2,8 +2,6 @@ from functools import partial
 
 import dateutil
 from beancount.core import data
-from beancount.ingest.importers.csv import Col as IngestCol
-from beancount.ingest.importers.csv import Importer as IngestImporter
 
 import beangulp
 from beancount_importers.bank_classifier import payee_to_account_mapping
