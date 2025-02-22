@@ -42,29 +42,15 @@ def categorizer(txn, row):
 
     return txn
 
-
-IMPORTER = csv.CSVImporter(
-    {
-        Col.DATE: "Started Date",
-        Col.NARRATION: "Description",
-        Col.AMOUNT: "Amount",
-        Col.PAYEE: "Description",
-        Col.CURRENCY: "Currency",
-        Col.BALANCE: "Balance",
-    },
-    "Assets:Revolut:Cash",
-    "GBP",
-    categorizer=categorizer,
-)
-
-def get_ingest_importer(account, currency):
-    return IngestImporter(
+def get_importer(account, currency):
+    return csv.CSVImporter(
         {
-            IngestCol.DATE: "Started Date",
-            IngestCol.NARRATION: "Description",
-            IngestCol.AMOUNT: "Amount",
-            IngestCol.PAYEE: "Description",
-            IngestCol.BALANCE: "Balance",
+            Col.DATE: "Started Date",
+            Col.NARRATION: "Description",
+            Col.AMOUNT: "Amount",
+            Col.PAYEE: "Description",
+            Col.CURRENCY: "Currency",
+            Col.BALANCE: "Balance",
         },
         account,
         currency,
@@ -72,5 +58,5 @@ def get_ingest_importer(account, currency):
     )
 
 if __name__ == "__main__":
-    ingest = beangulp.Ingest([IMPORTER], [])
+    ingest = beangulp.Ingest([get_importer("Assets:Revolut:Cash", "GBP")], [])
     ingest()

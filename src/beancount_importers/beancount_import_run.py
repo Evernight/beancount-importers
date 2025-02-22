@@ -24,8 +24,8 @@ def get_importer_config(type, account, currency, importer_params):
     if type == 'monzo':
         return dict(
             **common,
-            module='beancount_import.source.generic_importer_source',
-            importer=import_monzo.get_ingest_importer(account, currency, importer_params),
+            module='beancount_import.source.generic_importer_source_beangulp',
+            importer=import_monzo.get_importer(account, currency, importer_params),
             description=(
                 "In the app go to Help > Download a statement. "
                 "The easiest way would be just to download monthly statements every month."
@@ -35,16 +35,16 @@ def get_importer_config(type, account, currency, importer_params):
     elif type == 'wise':
         return dict(
             **common,
-            module='beancount_import.source.generic_importer_source',
-            importer=import_wise.get_ingest_importer(account, currency),
+            module='beancount_import.source.generic_importer_source_beangulp',
+            importer=import_wise.get_importer(account, currency),
             description='Can be downloaded online from https://wise.com/balances/statements',
             emoji='💵'
         )
     elif type == 'revolut':
         return dict(
             **common,
-            module='beancount_import.source.generic_importer_source',
-            importer=import_revolut.get_ingest_importer(account, currency),
+            module='beancount_import.source.generic_importer_source_beangulp',
+            importer=import_revolut.get_importer(account, currency),
             emoji='💵'
         )
     elif type == 'ibkr':
@@ -117,8 +117,8 @@ def get_import_config(data_dir, output_dir):
         'monzo': dict(
             data_sources=[
                 dict(
-                    module='beancount_import.source.generic_importer_source',
-                    importer=import_monzo.get_ingest_importer('Assets:Monzo:Cash', 'GBP'),
+                    module='beancount_import.source.generic_importer_source_beangulp',
+                    importer=import_monzo.get_importer('Assets:Monzo:Cash', 'GBP'),
                     account='Assets:Monzo:Cash',
                     directory=os.path.join(data_dir, 'monzo')
                 )
@@ -128,8 +128,8 @@ def get_import_config(data_dir, output_dir):
         'wise_usd': dict(
             data_sources=[
                 dict(
-                    module='beancount_import.source.generic_importer_source',
-                    importer=import_wise.get_ingest_importer('Assets:Wise:Cash', 'USD'),
+                    module='beancount_import.source.generic_importer_source_beangulp',
+                    importer=import_wise.get_importer('Assets:Wise:Cash', 'USD'),
                     account='Assets:Wise:Cash',
                     directory=os.path.join(data_dir, 'wise_usd')
                 )
@@ -139,8 +139,8 @@ def get_import_config(data_dir, output_dir):
         'wise_gbp': dict(
             data_sources=[
                 dict(
-                    module='beancount_import.source.generic_importer_source',
-                    importer=import_wise.get_ingest_importer('Assets:Wise:Cash', 'GBP'),
+                    module='beancount_import.source.generic_importer_source_beangulp',
+                    importer=import_wise.get_importer('Assets:Wise:Cash', 'GBP'),
                     account='Assets:Wise:Cash',
                     directory=os.path.join(data_dir, 'wise_gbp')
                 )
@@ -150,8 +150,8 @@ def get_import_config(data_dir, output_dir):
         'wise_eur': dict(
             data_sources=[
                 dict(
-                    module='beancount_import.source.generic_importer_source',
-                    importer=import_wise.get_ingest_importer('Assets:Wise:Cash', 'EUR'),
+                    module='beancount_import.source.generic_importer_source_beangulp',
+                    importer=import_wise.get_importer('Assets:Wise:Cash', 'EUR'),
                     account='Assets:Wise:Cash',
                     directory=os.path.join(data_dir, 'wise_eur')
                 )
@@ -161,8 +161,8 @@ def get_import_config(data_dir, output_dir):
         'revolut_usd': dict(
             data_sources=[
                 dict(
-                    module='beancount_import.source.generic_importer_source',
-                    importer=import_revolut.get_ingest_importer('Assets:Revolut:Cash', 'USD'),
+                    module='beancount_import.source.generic_importer_source_beangulp',
+                    importer=import_revolut.get_importer('Assets:Revolut:Cash', 'USD'),
                     account='Assets:Revolut:Cash',
                     directory=os.path.join(data_dir, 'revolut_usd')
                 )
@@ -172,8 +172,8 @@ def get_import_config(data_dir, output_dir):
         'revolut_gbp': dict(
             data_sources=[
                 dict(
-                    module='beancount_import.source.generic_importer_source',
-                    importer=import_revolut.get_ingest_importer('Assets:Revolut:Cash', 'GBP'),
+                    module='beancount_import.source.generic_importer_source_beangulp',
+                    importer=import_revolut.get_importer('Assets:Revolut:Cash', 'GBP'),
                     account='Assets:Revolut:Cash',
                     directory=os.path.join(data_dir, 'revolut_gbp')
                 )
@@ -183,8 +183,8 @@ def get_import_config(data_dir, output_dir):
         'revolut_eur': dict(
             data_sources=[
                 dict(
-                    module='beancount_import.source.generic_importer_source',
-                    importer=import_revolut.get_ingest_importer('Assets:Revolut:Cash', 'EUR'),
+                    module='beancount_import.source.generic_importer_source_beangulp',
+                    importer=import_revolut.get_importer('Assets:Revolut:Cash', 'EUR'),
                     account='Assets:Revolut:Cash',
                     directory=os.path.join(data_dir, 'revolut_eur')
                 )

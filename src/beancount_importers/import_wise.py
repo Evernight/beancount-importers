@@ -76,31 +76,16 @@ def categorizer(txn, row):
 
     return txn
 
-IMPORTER = csv.CSVImporter(
-    {
-        Col.DATE: "Date",
-        Col.NARRATION: "Description",
-        Col.AMOUNT: "Amount",
-        Col.PAYEE: "Merchant",
-        Col.CURRENCY: "Currency",
-        Col.REFERENCE_ID: "TransferWise ID",
-        Col.BALANCE: "Running Balance",
-    },
-    "Assets:Wise:Cash",
-    "GBP",
-    categorizer=categorizer,
-    dateutil_kwds={"parserinfo": dateutil.parser.parserinfo(dayfirst=True)},
-)
-
-def get_ingest_importer(account, currency):
-    return IngestImporter(
+def get_importer(account, currency):
+    return csv.CSVImporter(
         {
-            IngestCol.DATE: "Date",
-            IngestCol.NARRATION: "Description",
-            IngestCol.AMOUNT: "Amount",
-            IngestCol.PAYEE: "Merchant",
-            IngestCol.REFERENCE_ID: "TransferWise ID",
-            IngestCol.BALANCE: "Running Balance",
+            Col.DATE: "Date",
+            Col.NARRATION: "Description",
+            Col.AMOUNT: "Amount",
+            Col.PAYEE: "Merchant",
+            Col.CURRENCY: "Currency",
+            Col.REFERENCE_ID: "TransferWise ID",
+            Col.BALANCE: "Running Balance",
         },
         account,
         currency,
@@ -109,5 +94,5 @@ def get_ingest_importer(account, currency):
     )
 
 if __name__ == "__main__":
-    ingest = beangulp.Ingest([IMPORTER], [])
+    ingest = beangulp.Ingest([get_importer("Assets:Wise:Cash", "GBP", {})], [])
     ingest()
