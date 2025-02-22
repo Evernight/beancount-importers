@@ -1,12 +1,13 @@
-import beangulp
-
-from beangulp.importers import csv
-from beancount.core import data
 from functools import partial
-import dateutil
-from beancount.ingest.importers.csv import Importer as IngestImporter, Col as IngestCol
 
+import dateutil
+from beancount.core import data
+from beancount.ingest.importers.csv import Col as IngestCol
+from beancount.ingest.importers.csv import Importer as IngestImporter
+
+import beangulp
 from beancount_importers.bank_classifier import payee_to_account_mapping
+from beangulp.importers import csv
 
 Col = csv.Col
 
@@ -24,11 +25,11 @@ CATEGORY_TO_ACCOUNT_MAPPING = {
     "Donations": "Expenses:Donations",
 }
 
-TRANSACTIONS_CLASSIFIED_BY_ID = {
-}
+TRANSACTIONS_CLASSIFIED_BY_ID = {}
 
 # UNCATEGORIZED_EXPENSES_ACCOUNT = "Expenses:Uncategorized:Monzo"
 UNCATEGORIZED_EXPENSES_ACCOUNT = "Expenses:FIXME"
+
 
 def categorizer(params, txn, row):
     transaction_id = row[0]
@@ -42,14 +43,14 @@ def categorizer(params, txn, row):
         posting_account = payee_to_account_mapping.get(payee)
 
         # Default by category
-        if not params.get('ignore_bank_categories'):
+        if not params.get("ignore_bank_categories"):
             if not posting_account:
                 posting_account = CATEGORY_TO_ACCOUNT_MAPPING.get(
                     monzo_category, UNCATEGORIZED_EXPENSES_ACCOUNT
                 )
         if not posting_account:
             posting_account = UNCATEGORIZED_EXPENSES_ACCOUNT
-            
+
     else:
         if payee == "Savings Pot" or payee == "Savings Monzo Pot":
             posting_account = "Assets:Monzo:Savings"
@@ -68,6 +69,7 @@ def categorizer(params, txn, row):
 
     return txn
 
+
 def get_importer(account, currency, importer_params):
     return csv.CSVImporter(
         {
@@ -84,6 +86,7 @@ def get_importer(account, currency, importer_params):
         categorizer=partial(categorizer, importer_params),
         dateutil_kwds={"parserinfo": dateutil.parser.parserinfo(dayfirst=True)},
     )
+
 
 if __name__ == "__main__":
     ingest = beangulp.Ingest([get_importer("Assets:Monzo:Cash", "GBP", {})], [])

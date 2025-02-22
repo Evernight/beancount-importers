@@ -1,14 +1,16 @@
-import beangulp
-from beangulp.importers import csv
 from beancount.core import data
-from beancount.ingest.importers.csv import Importer as IngestImporter, Col as IngestCol
+from beancount.ingest.importers.csv import Col as IngestCol
+from beancount.ingest.importers.csv import Importer as IngestImporter
 
+import beangulp
 from beancount_importers.bank_classifier import payee_to_account_mapping
+from beangulp.importers import csv
 
 Col = csv.Col
 
 # UNCATEGORIZED_EXPENSES_ACCOUNT = "Expenses:Uncategorized:Revolut"
 UNCATEGORIZED_EXPENSES_ACCOUNT = "Expenses:FIXME"
+
 
 def categorizer(txn, row):
     payee = row[4]
@@ -26,7 +28,7 @@ def categorizer(txn, row):
             posting_account = UNCATEGORIZED_EXPENSES_ACCOUNT
     else:
         if "Withdrawing savings" in comment:
-            posting_account = "Assets:Revolut:Savings"  
+            posting_account = "Assets:Revolut:Savings"
         elif "Metal Cashback" in comment:
             posting_account = "Income:Revolut:Cashback"
         elif "Referral reward" in comment:
@@ -42,6 +44,7 @@ def categorizer(txn, row):
 
     return txn
 
+
 def get_importer(account, currency):
     return csv.CSVImporter(
         {
@@ -56,6 +59,7 @@ def get_importer(account, currency):
         currency,
         categorizer=categorizer,
     )
+
 
 if __name__ == "__main__":
     ingest = beangulp.Ingest([get_importer("Assets:Revolut:Cash", "GBP")], [])
